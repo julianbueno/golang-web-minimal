@@ -33,15 +33,17 @@ steps:
           CLUSTER=$$(gcloud config get-value container/cluster)
           PROJECT=$$(gcloud config get-value core/project)
           ZONE=$$(gcloud config get-value compute/zone)
+          
+          echo $${CLUSTER}
 
           gcloud container clusters get-credentials "$${CLUSTER}" \
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./k8s/deployments/*.yaml
+          echo sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml
           
-          kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
-          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
-          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/services
+          # kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
+          # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/deployments
+          # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/services
 
-          echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
+          # echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
