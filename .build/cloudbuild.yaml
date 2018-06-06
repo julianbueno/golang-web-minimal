@@ -44,9 +44,8 @@ steps:
             --zone "$${ZONE}"  
 
           sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/golang-web-min.yaml
-          cat ./.k8s/deployments/golang-web-min.yaml
+          #cat ./.k8s/deployments/golang-web-min.yaml
           
-          #kubectl get ns ${_USER} || kubectl create ns ${_USER}
           kubectl apply -f .k8s/deployments/golang-web-min.yaml
           kubectl apply -f .k8s/services/app.yaml
 
