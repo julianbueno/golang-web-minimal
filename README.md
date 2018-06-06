@@ -15,6 +15,10 @@ go run main.go
 https://github.com/GoogleCloudPlatform/container-builder-workshop
 
 ```
+ gcloud container clusters create 
+```
+
+```
 export PROJECT=
 export CLUSTER=
 export ZONE=
