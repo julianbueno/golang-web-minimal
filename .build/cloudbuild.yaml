@@ -43,11 +43,11 @@ steps:
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml
-          # cat ./.k8s/deployments/golang-web-min.yaml
+          sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/golang-web-min.yaml
+          cat ./.k8s/deployments/golang-web-min.yaml
           
           kubectl get ns ${_USER} || kubectl create ns ${_USER}
-          kubectl apply --namespace ${_USER} --recursive -f .k8s/deployments
-          kubectl apply --namespace ${_USER} --recursive -f .k8s/services
+          kubectl apply --namespace ${_USER} -f .k8s/deployments/golang-web-min.yaml
+          kubectl apply --namespace ${_USER} -f .k8s/services/app.yaml
 
           echo service available at http://`kubectl --namespace=${_USER} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
