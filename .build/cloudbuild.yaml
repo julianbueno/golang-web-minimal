@@ -34,13 +34,16 @@ steps:
           PROJECT=$$(gcloud config get-value core/project)
           ZONE=$$(gcloud config get-value compute/zone)
           
-          echo $${CLUSTER}
+          echo "$${CLUSTER}"
+          echo "$${PROJECT}"
+          echo "$${ZONE}"
 
           gcloud container clusters get-credentials "$${CLUSTER}" \
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          echo sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml
+          line=$(sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml)
+          echo "$line"
           
           # kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
           # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/deployments
