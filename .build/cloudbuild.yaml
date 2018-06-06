@@ -17,7 +17,7 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}, latest'      
+      - 'gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}'      
 
 ## Deploy
   - id: 'deploy'
