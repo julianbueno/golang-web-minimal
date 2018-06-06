@@ -17,40 +17,31 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}'      
+      - 'gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}, latest'      
 
-### Deploy
-#   - id: 'deploy'
-#     name: 'gcr.io/cloud-builders/gcloud'
-#     env:
-#       - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
-#       - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
-#       - 'KUBECONFIG=/kube/config'
-#     entrypoint: 'bash'
-#     args:
-#       - '-c'
-#       - |
-#           CLUSTER=$$(gcloud config get-value container/cluster)
-#           PROJECT=$$(gcloud config get-value core/project)
-#           ZONE=$$(gcloud config get-value compute/zone)
+## Deploy
+  - id: 'deploy'
+    name: 'gcr.io/cloud-builders/gcloud'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+      - 'KUBECONFIG=/kube/config'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          CLUSTER=$$(gcloud config get-value container/cluster)
+          PROJECT=$$(gcloud config get-value core/project)
+          ZONE=$$(gcloud config get-value compute/zone)
 
-#           gcloud container clusters get-credentials "$${CLUSTER}" \
-#             --project "$${PROJECT}" \
-#             --zone "$${ZONE}"  
+          gcloud container clusters get-credentials "$${CLUSTER}" \
+            --project "$${PROJECT}" \
+            --zone "$${ZONE}"  
 
-#           sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./kubernetes/deployments/*.yaml
+          sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./k8s/deployments/*.yaml
           
-#           kubectl get ns ${_USER} || kubectl create ns ${_USER}
-#           kubectl apply --namespace ${_USER} --recursive -f kubernetes/deployments/dev
-#           kubectl apply --namespace ${_USER} --recursive -f kubernetes/services
+          kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/services
 
-
-# sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gcme:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
-          
-#           kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
-#           kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
-#           kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/services
-
-
-
-#           echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/gceme-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
+          echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
