@@ -42,8 +42,8 @@ steps:
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          line=$(sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml)
-          echo "$line"
+          sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml
+          cat ./.k8s/deployments/golang-web-min.yaml
           
           # kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
           # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/deployments
