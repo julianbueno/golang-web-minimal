@@ -23,8 +23,9 @@ steps:
   - id: 'deploy'
     name: 'gcr.io/cloud-builders/gcloud'
     env:
-      - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+      #- 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+      - 'CLOUDSDK_COMPUTE_ZONE=australia-southeast1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=meetup-ses-june'
       - 'KUBECONFIG=/kube/config'
     entrypoint: 'bash'
     args:
@@ -45,8 +46,8 @@ steps:
           sed -i 's|gcr.io/$PROJECT_ID/$REPO_NAME:.*|gcr.io/$PROJECT_ID/$REPO_NAME:${COMMIT_SHA}|' ./.k8s/deployments/*.yaml
           cat ./.k8s/deployments/golang-web-min.yaml
           
-          # kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
-          # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/deployments
-          # kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/services
+          kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/deployments
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f .k8s/services
 
-          # echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
+          echo service available at http://`kubectl --namespace=${BRANCH_NAME} get service/golang-web-min-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
