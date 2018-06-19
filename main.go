@@ -8,7 +8,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hey!, you've requested this: %s\n", r.URL.Path)
+		fmt.Fprintf(w, "<h1>Hi SES, you've requested: %s</h1>\n", r.URL.Path)
 	})
 
 	defaultPort := "8080"
