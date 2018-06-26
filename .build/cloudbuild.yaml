@@ -25,7 +25,7 @@ steps:
     env:
       #- 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
       - 'CLOUDSDK_COMPUTE_ZONE=australia-southeast1-b'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=meetup-ses-june'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=app-cluster'
       - 'KUBECONFIG=/kube/config'
     entrypoint: 'bash'
     args:
